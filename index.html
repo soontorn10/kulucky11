@@ -145,6 +145,16 @@
 
       resultHTML += `<br><strong>จำนวนเลขคู่: ${even}</strong><br>`;
       resultHTML += `<strong>จำนวนเลขคี่: ${odd}</strong><br>`;
+
+      // สรุป "คู่/คี่" ว่าออกมากกว่า
+      if (even > odd) {
+        resultHTML += "✅ ออกคู่เยอะกว่า";
+      } else if (odd > even) {
+        resultHTML += "✅ ออกคี่เยอะกว่า";
+      } else {
+        resultHTML += "⚖️ คู่-คี่ ออกเท่ากัน";
+      }
+
       resultHTML += `<br><strong>ทำนายตาถัดไป: ${predictedLowHigh} และ ${predictedEvenOdd}</strong><br>`;
 
       document.getElementById("result").innerHTML = resultHTML;
