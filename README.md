@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8">
@@ -84,6 +85,9 @@
   <audio id="resetSound" src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_5fd7a39b2b.mp3?filename=button-click-13884.mp3"></audio>
 
   <script>
+    // ประวัติ 10 ตาล่าสุด
+    let history = [];
+
     function analyze() {
       const numStr = document.getElementById("inputNumber").value.trim();
 
@@ -97,7 +101,10 @@
 
       let low = 0;  // 0-4
       let high = 0; // 5-9
+      let even = 0; // เลขคู่
+      let odd = 0;  // เลขคี่
 
+      // วิเคราะห์เลขแต่ละหลัก
       for (let char of numStr) {
         const digit = parseInt(char);
         if (digit <= 4) {
@@ -105,8 +112,26 @@
         } else {
           high++;
         }
+
+        // ตรวจสอบเลขคู่/คี่
+        if (digit % 2 === 0) {
+          even++;
+        } else {
+          odd++;
+        }
       }
 
+      // เพิ่มผลการวิเคราะห์ลงใน history
+      if (history.length >= 10) {
+        history.shift(); // ลบข้อมูลเก่าที่เกิน 10
+      }
+      history.push({ low, high, even, odd });
+
+      // ทำนายตาถัดไป
+      let predictedLowHigh = (high > low) ? "สูง" : (low > high ? "ต่ำ" : "เท่ากัน");
+      let predictedEvenOdd = (even > odd) ? "คู่" : (odd > even ? "คี่" : "เท่ากัน");
+
+      // สรุปผล
       let resultHTML = `ต่ำ (0-4): ${low} ครั้ง<br>สูง (5-9): ${high} ครั้ง<br>`;
       if (low > high) {
         resultHTML += "✅ ออกต่ำเยอะกว่า";
@@ -118,6 +143,10 @@
         resultHTML += "⚖️ ต่ำ-สูง ออกเท่ากัน";
         document.getElementById("emojiImage").src = "https://cdn-icons-png.flaticon.com/512/616/616408.png";
       }
+
+      resultHTML += `<br><strong>จำนวนเลขคู่: ${even}</strong><br>`;
+      resultHTML += `<strong>จำนวนเลขคี่: ${odd}</strong><br>`;
+      resultHTML += `<br><strong>ทำนายตาถัดไป: ${predictedLowHigh} และ ${predictedEvenOdd}</strong><br>`;
 
       document.getElementById("result").innerHTML = resultHTML;
     }
